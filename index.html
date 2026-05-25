@@ -509,24 +509,76 @@
       margin-top: 32px;
     }
     .value-card {
-      background: var(--dark3);
-      border: 1px solid rgba(201,168,76,0.1);
-      border-radius: 8px;
-      padding: 20px;
-      transition: border-color 0.2s;
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      cursor: default;
+      border: 1px solid rgba(201,168,76,0.12);
+      transition: border-color 0.3s, box-shadow 0.3s;
     }
-    .value-card:hover { border-color: rgba(201,168,76,0.4); }
+    .value-card:hover {
+      border-color: rgba(201,168,76,0.55);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+    }
+    .value-card img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.6s ease;
+      z-index: 0;
+    }
+    .value-card:hover img { transform: scale(1.1); }
+    /* base dark scrim */
+    .value-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.42);
+      z-index: 1;
+      transition: opacity 0.35s;
+    }
+    .value-card:hover::before { opacity: 0.2; }
+    /* slide-up info panel */
+    .value-card-panel {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      z-index: 2;
+      padding: 48px 16px 16px;
+      background: linear-gradient(transparent, rgba(8,8,8,0.95) 38%);
+      transition: padding 0.35s ease;
+    }
+    .value-card:hover .value-card-panel { padding-bottom: 18px; }
     .value-icon {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+      display: block;
     }
     .value-name {
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: var(--white);
-      margin-bottom: 4px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: #fff;
+      margin-bottom: 0;
+      line-height: 1.2;
     }
-    .value-desc { font-size: 0.8rem; color: var(--gray); line-height: 1.5; }
+    .value-desc {
+      font-size: 0.78rem;
+      color: rgba(245,245,240,0.82);
+      line-height: 1.55;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      margin-top: 0;
+      transition: max-height 0.45s ease, opacity 0.3s ease 0.08s, margin-top 0.3s;
+    }
+    .value-card:hover .value-desc {
+      max-height: 150px;
+      opacity: 1;
+      margin-top: 8px;
+    }
 
     /* ── HOURS STRIP ── */
     .hours-strip {
@@ -1222,42 +1274,71 @@
     #services { background: var(--black); }
     .services-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
       margin-top: 48px;
     }
+    @media (max-width: 900px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .services-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
+
     .service-card {
       background: var(--dark2);
       border: 1px solid rgba(201,168,76,0.08);
-      border-radius: 10px;
-      padding: 28px 24px;
-      transition: all 0.3s;
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all 0.35s ease;
+      position: relative;
     }
     .service-card:hover {
-      border-color: rgba(201,168,76,0.35);
-      transform: translateY(-3px);
+      border-color: rgba(201,168,76,0.5);
+      transform: translateY(-5px);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.45), 0 0 0 1px rgba(201,168,76,0.12);
     }
-    .service-icon { font-size: 2rem; margin-bottom: 14px; }
+    .service-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      position: relative;
+    }
+    .service-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      transition: transform 0.5s ease;
+      display: block;
+    }
+    .service-card:hover .service-img img { transform: scale(1.08); }
+    .service-img-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(transparent 30%, rgba(10,10,10,0.55));
+    }
+    .service-body { padding: 18px 20px 22px; }
+    .service-icon {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
     .service-name {
-      font-weight: 600;
+      font-weight: 700;
       font-size: 1rem;
       color: var(--white);
       margin-bottom: 8px;
     }
     .service-desc {
-      font-size: 0.8rem;
-      color: var(--gray);
+      font-size: 0.78rem;
+      color: var(--gray-light);
       line-height: 1.6;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .service-price {
       font-family: 'Playfair Display', serif;
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       color: var(--gold);
       font-weight: 700;
     }
     .service-price span {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-family: 'Inter', sans-serif;
       color: var(--gray);
       font-weight: 400;
@@ -1571,26 +1652,43 @@
         Our team of experienced barbers blends time-honoured techniques with modern styles to give you exactly the look you're after. Whether you're after a classic taper, a skin fade, or a full beard grooming session, we've got you covered.
       </p>
       <div class="about-values">
+
         <div class="value-card">
-          <div class="value-icon">✦</div>
-          <div class="value-name">Precision Cuts</div>
-          <div class="value-desc">Every line clean, every fade flawless.</div>
+          <img src="https://images.unsplash.com/photo-1647140655214-e4a2d914971f?w=500&h=380&fit=crop&crop=center&q=80" alt="Precision Cuts" loading="lazy" />
+          <div class="value-card-panel">
+            <span class="value-icon">✦</span>
+            <div class="value-name">Precision Cuts</div>
+            <div class="value-desc">Every cut starts with a consultation. Our barbers take time to understand your hair type, face shape and lifestyle — delivering clean lines and flawless fades every single visit.</div>
+          </div>
         </div>
+
         <div class="value-card">
-          <div class="value-icon">◈</div>
-          <div class="value-name">Premium Products</div>
-          <div class="value-desc">Only the best for your hair and beard.</div>
+          <img src="https://images.unsplash.com/photo-1567721971759-12402aedabf0?w=500&h=380&fit=crop&crop=center&q=80" alt="Premium Products" loading="lazy" />
+          <div class="value-card-panel">
+            <span class="value-icon">◈</span>
+            <div class="value-name">Premium Products</div>
+            <div class="value-desc">We stock only the highest quality grooming products — pomades, clays, beard oils and balms, hand-picked by our team and available in-shop or from our online store.</div>
+          </div>
         </div>
+
         <div class="value-card">
-          <div class="value-icon">⊕</div>
-          <div class="value-name">Community First</div>
-          <div class="value-desc">Locals serving locals since day one.</div>
+          <img src="https://images.unsplash.com/photo-1759142449398-89357aa1bb36?w=500&h=380&fit=crop&crop=center&q=80" alt="Community First" loading="lazy" />
+          <div class="value-card-panel">
+            <span class="value-icon">⊕</span>
+            <div class="value-name">Community First</div>
+            <div class="value-desc">Blades of Gold was built for Springwood. We take pride in being the local barber families trust — where regulars feel at home and every new face is welcomed like an old mate.</div>
+          </div>
         </div>
+
         <div class="value-card">
-          <div class="value-icon">◉</div>
-          <div class="value-name">Your Style</div>
-          <div class="value-desc">We listen, we create, you leave sharp.</div>
+          <img src="https://images.unsplash.com/photo-1618886614638-80e3c103d31a?w=500&h=380&fit=crop&crop=center&q=80" alt="Your Style" loading="lazy" />
+          <div class="value-card-panel">
+            <span class="value-icon">◉</span>
+            <div class="value-name">Your Style</div>
+            <div class="value-desc">Bring a photo, describe your vision, or let us suggest something that suits you. We listen, we adapt, and we make sure you leave looking exactly the way you imagined — or better.</div>
+          </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -1644,42 +1742,85 @@
   <h2 class="section-title">Our <span class="gold">Services</span></h2>
   <div class="divider"></div>
   <div class="services-grid">
+
     <div class="service-card">
-      <div class="service-icon">✂</div>
-      <div class="service-name">Classic Cut</div>
-      <div class="service-desc">Clean, timeless cut with scissors or clippers. Includes wash and style.</div>
-      <div class="service-price">$35<span>& up</span></div>
+      <div class="service-img">
+        <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=600&h=340&fit=crop&crop=center&q=80" alt="Classic Cut" loading="lazy" />
+        <div class="service-img-overlay"></div>
+      </div>
+      <div class="service-body">
+        <div class="service-icon">✂</div>
+        <div class="service-name">Classic Cut</div>
+        <div class="service-desc">Clean, timeless cut with scissors or clippers. Includes wash and style.</div>
+        <div class="service-price">$35<span>& up</span></div>
+      </div>
     </div>
+
     <div class="service-card">
-      <div class="service-icon">⚡</div>
-      <div class="service-name">Skin Fade</div>
-      <div class="service-desc">High, mid or low fade blended to perfection for a sharp finish.</div>
-      <div class="service-price">$40<span>& up</span></div>
+      <div class="service-img">
+        <img src="https://images.unsplash.com/photo-1629189784191-9afdcbcb0398?w=600&h=340&fit=crop&crop=center&q=80" alt="Skin Fade" loading="lazy" />
+        <div class="service-img-overlay"></div>
+      </div>
+      <div class="service-body">
+        <div class="service-icon">⚡</div>
+        <div class="service-name">Skin Fade</div>
+        <div class="service-desc">High, mid or low fade blended to perfection for a sharp finish.</div>
+        <div class="service-price">$40<span>& up</span></div>
+      </div>
     </div>
+
     <div class="service-card">
-      <div class="service-icon">◈</div>
-      <div class="service-name">Beard Trim</div>
-      <div class="service-desc">Shape, line up, and groom your beard with hot towel finish.</div>
-      <div class="service-price">$25<span>& up</span></div>
+      <div class="service-img">
+        <img src="https://images.unsplash.com/photo-1532710093739-9470acff878f?w=600&h=340&fit=crop&crop=center&q=80" alt="Beard Trim" loading="lazy" />
+        <div class="service-img-overlay"></div>
+      </div>
+      <div class="service-body">
+        <div class="service-icon">◈</div>
+        <div class="service-name">Beard Trim</div>
+        <div class="service-desc">Shape, line up, and groom your beard with hot towel finish.</div>
+        <div class="service-price">$25<span>& up</span></div>
+      </div>
     </div>
+
     <div class="service-card">
-      <div class="service-icon">♛</div>
-      <div class="service-name">Cut + Beard</div>
-      <div class="service-desc">Full haircut and beard groom combo — the complete package.</div>
-      <div class="service-price">$55<span>& up</span></div>
+      <div class="service-img">
+        <img src="https://images.unsplash.com/photo-1493256338651-d82f7acb2b38?w=600&h=340&fit=crop&crop=center&q=80" alt="Cut + Beard" loading="lazy" />
+        <div class="service-img-overlay"></div>
+      </div>
+      <div class="service-body">
+        <div class="service-icon">♛</div>
+        <div class="service-name">Cut + Beard</div>
+        <div class="service-desc">Full haircut and beard groom combo — the complete package.</div>
+        <div class="service-price">$55<span>& up</span></div>
+      </div>
     </div>
+
     <div class="service-card">
-      <div class="service-icon">✦</div>
-      <div class="service-name">Kids Cut</div>
-      <div class="service-desc">Haircuts for children under 12 in a friendly, relaxed environment.</div>
-      <div class="service-price">$28<span>& up</span></div>
+      <div class="service-img">
+        <img src="https://images.unsplash.com/photo-1703792685152-d13e206924d8?w=600&h=340&fit=crop&crop=center&q=80" alt="Kids Cut" loading="lazy" />
+        <div class="service-img-overlay"></div>
+      </div>
+      <div class="service-body">
+        <div class="service-icon">✦</div>
+        <div class="service-name">Kids Cut</div>
+        <div class="service-desc">Haircuts for children under 12 in a friendly, relaxed environment.</div>
+        <div class="service-price">$28<span>& up</span></div>
+      </div>
     </div>
+
     <div class="service-card">
-      <div class="service-icon">◉</div>
-      <div class="service-name">Hot Towel Shave</div>
-      <div class="service-desc">Traditional straight-razor shave with hot towel and premium balm.</div>
-      <div class="service-price">$45<span>& up</span></div>
+      <div class="service-img">
+        <img src="https://images.unsplash.com/photo-1588398810131-73badafbd302?w=600&h=340&fit=crop&crop=center&q=80" alt="Hot Towel Shave" loading="lazy" />
+        <div class="service-img-overlay"></div>
+      </div>
+      <div class="service-body">
+        <div class="service-icon">◉</div>
+        <div class="service-name">Hot Towel Shave</div>
+        <div class="service-desc">Traditional straight-razor shave with hot towel and premium balm.</div>
+        <div class="service-price">$45<span>& up</span></div>
+      </div>
     </div>
+
   </div>
 </section>
 
